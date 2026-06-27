@@ -1,0 +1,66 @@
+[
+  {
+    "slug": "green-woodworking",
+    "name": "Green Woodworking",
+    "description": "Learn fresh, unseasoned wood carving using traditional hand tools like axes, drawknives, and shavehorses.",
+    "seoTitle": "Green Woodworking Courses & Workshops UK | Learn Traditional Spoon Carving",
+    "seoDescription": "Discover green woodworking courses near you. Study fresh birch carving, axe hewing, and sloyd knife techniques under organic wood craft experts.",
+    "image": "https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?w=800&auto=format&fit=crop&q=80"
+  },
+  {
+    "slug": "fine-cabinetry",
+    "name": "Fine Cabinetry & Restoration",
+    "description": "Master heirloom furniture restoration, traditional cabinet construction, and fine finishing techniques with french polish.",
+    "seoTitle": "Cabinet Making Classes & Fine Restoration Courses UK",
+    "seoDescription": "Develop carpentry joinery and hand-tool confidence. Master drawer building, walnut heirloom oil veneers, and French polishing cabinet classes.",
+    "image": "https://images.unsplash.com/photo-1595182855171-ec5afb97de77?w=800&auto=format&fit=crop&q=80"
+  },
+  {
+    "slug": "joinery-structural",
+    "name": "Traditional Joinery & Timber-Framing",
+    "description": "Understand raw structural engineering. Construct hand-cut mortise, tenon, and Japanese sliding interlock joints.",
+    "seoTitle": "Traditional Joinery Classes & Japanese Carpentry Workshops",
+    "seoDescription": "Master geometric wood locks, timber drafting, and Japanese sashimono joints without nails or screws. Register for advanced joinery workshops.",
+    "image": "https://images.unsplash.com/photo-1453733190148-c44698c26578?w=800&auto=format&fit=crop&q=80"
+  },
+  {
+    "slug": "furniture-making",
+    "name": "Furniture Making & Woodturning",
+    "description": "Mount logs on spinning lathes, assemble hardwood Dovetail keepsake chests, and fabricate bespoke accent tables.",
+    "seoTitle": "Custom Furniture Crafting & Woodturning Lathe Courses",
+    "seoDescription": "Take the step to becoming a professional furniture craftsman. From hardwood selection to lathe spinning, shape beautiful bowls and shelves.",
+    "image": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&auto=format&fit=crop&q=80"
+  },
+  {
+    "slug": "instrument-making",
+    "name": "Instrument Making (Lutherie)",
+    "description": "Learn the precise art of shaping tonewoods. Craft bespoke acoustic guitars, violins, and traditional folk instruments.",
+    "seoTitle": "Instrument Making Classes & Lutherie Courses UK",
+    "seoDescription": "Discover lutherie classes near you. Craft acoustic guitars, shape tonewoods, and build custom instruments with expert guidance.",
+    "image": "https://images.unsplash.com/photo-1596775369650-f8ec005dc25c?w=800&auto=format&fit=crop&q=80"
+  },
+  {
+    "slug": "woodcarving-whittling",
+    "name": "Woodcarving & Sculpting",
+    "description": "Create detailed relief carvings, sculptural figures, and ornamental designs using specialised gouges, V-tools, and chisels.",
+    "seoTitle": "Woodcarving Classes & Sculpting Workshops UK",
+    "seoDescription": "Master the art of 3D woodcarving. Join workshops covering relief carving, classical ornamentation, and figurative sculpture using hand chisels.",
+    "image": "https://images.unsplash.com/photo-1621323321588-ac434a9caaf3?w=800&auto=format&fit=crop&q=80"
+  },
+  {
+    "slug": "marquetry-veneering",
+    "name": "Marquetry & Veneering",
+    "description": "Create stunning decorative patterns and pictures by applying thin slices of wood to furniture forms.",
+    "seoTitle": "Marquetry Classes & Wood Veneering Courses UK",
+    "seoDescription": "Learn the delicate craft of marquetry. Cut and assemble intricate veneer patterns, explore parquetry, and master traditional inlay techniques.",
+    "image": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&auto=format&fit=crop&q=80"
+  },
+  {
+    "slug": "boat-building",
+    "name": "Wooden Boat Building",
+    "description": "Discover traditional maritime carpentry. Learn lofting, planking, and steam bending to construct beautiful wooden vessels.",
+    "seoTitle": "Wooden Boat Building Courses & Shipwright Classes UK",
+    "seoDescription": "Experience the heritage of boat building. Master steam bending, clinker construction, and maritime joinery in specialized wooden boat workshops.",
+    "image": "https://images.unsplash.com/photo-1505245208761-ba3ce23e41d8?w=800&auto=format&fit=crop&q=80"
+  }
+]

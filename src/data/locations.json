@@ -1,0 +1,35 @@
+[
+  {
+    "slug": "devon",
+    "name": "Devon Woodshop",
+    "county": "Devon",
+    "address": "The Oak Barn, Slapton Road, Totnes TQ9 5LS",
+    "description": "Nestled in pristine ancient English oak woodlands, our Devon barn setup is a green woodworking dream containing traditional shavehorses and outdoor pole lathes.",
+    "seoTitle": "Woodworking Classes Devon | Green Woodcarving Workshops Totnes",
+    "seoDescription": "Discover wood spoon carving & axe workshops in Devon. Learn timber styling inside our beautiful traditional Totnes oak wood barn studio.",
+    "instructorId": "inst_david",
+    "image": "https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?w=800&auto=format&fit=crop&q=80"
+  },
+  {
+    "slug": "london",
+    "name": "London Atelier",
+    "county": "Greater London",
+    "address": "Unit 4B, Blackhorse Lane Industrial Studios, Walthamstow E17 5QJ",
+    "description": "A high-precision climate-controlled space in East London equipped with professional Veritas hand planes, Lie-Nielsen bench chisels, and Japanese natural stones.",
+    "seoTitle": "Woodworking & Cabinet Making Classes London | Learn Walthamstow",
+    "seoDescription": "Join elite furniture making & cabinet repair studios in East London. Access professional tools, sharpen hand chisels, and practice woodturning.",
+    "instructorId": "inst_evelyn",
+    "image": "https://images.unsplash.com/photo-1595182855171-ec5afb97de77?w=800&auto=format&fit=crop&q=80"
+  },
+  {
+    "slug": "cornwall",
+    "name": "Cornwall Coastal Forge & Barn",
+    "county": "Cornwall",
+    "address": "High Cliffs Crafts, Saint Erth, Hayle TR27 6JG",
+    "description": "Our scenic Cornwall wooden guildhouse provides ocean-facing benches, perfect for sawing long structural softwood joint lines and practicing ancient Japanese framing.",
+    "seoTitle": "Traditional Joinery Classes Cornwall | Creative Woodcraft Workshops",
+    "seoDescription": "Build beautiful wood joint frames on the Cornwall coast. Try authentic pull sawing and joinery workshops guided by historic masters.",
+    "instructorId": "inst_marcus",
+    "image": "https://images.unsplash.com/photo-1453733190148-c44698c26578?w=800&auto=format&fit=crop&q=80"
+  }
+]

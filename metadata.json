@@ -1,0 +1,8 @@
+{
+  "name": "Woodworker Course Booking Portal",
+  "description": "A comprehensive multi-vendor woodworking course marketplace modeled after CraftCourses.com, with instructor dashboards, listing creation, client bookings, and platform commission ledgers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
