@@ -50,7 +50,7 @@ export default function LoginForm() {
       if (user) {
         let role: "customer" | "instructor" = "customer";
 
-        // 2. Fetch profile from Supabase
+        // 2. Fetch profile from Supabase (checking both "profiles" and public "User" tables for complete synchronization)
         try {
           const { data: profile, error: profileError } = await supabase
             .from("profiles")
@@ -59,19 +59,38 @@ export default function LoginForm() {
             .single();
 
           if (!profileError && profile) {
-            role = profile.role as "customer" | "instructor";
+            const rawRole = (profile.role || "").toLowerCase();
+            role = (rawRole === "instructor" || rawRole === "creator") ? "instructor" : "customer";
           } else {
-            // Check metadata as fallback
-            if (user.user_metadata?.role) {
-              role = user.user_metadata.role as "customer" | "instructor";
-            } else if (email.includes("instructor") || email.includes("david") || email.includes("charlee")) {
-              role = "instructor";
+            // Check public "User" table as the primary source of truth from trigger
+            const { data: dbUser, error: dbUserError } = await supabase
+              .from("User")
+              .select("role")
+              .eq("id", user.id)
+              .single();
+
+            if (!dbUserError && dbUser) {
+              const rawRole = (dbUser.role || "").toUpperCase();
+              role = rawRole === "CREATOR" ? "instructor" : "customer";
+            } else {
+              // Fallback to user metadata
+              const rawRole = (user.user_metadata?.role || "").toUpperCase();
+              if (rawRole === "CREATOR" || rawRole === "INSTRUCTOR") {
+                role = "instructor";
+              } else if (rawRole === "CUSTOMER") {
+                role = "customer";
+              } else if (email.includes("instructor") || email.includes("david") || email.includes("charlee")) {
+                role = "instructor";
+              }
             }
           }
         } catch (dbErr) {
           console.warn("DB Profiles check skipped or errored, reading fallback:", dbErr);
-          if (user.user_metadata?.role) {
-            role = user.user_metadata.role as "customer" | "instructor";
+          const rawRole = (user.user_metadata?.role || "").toUpperCase();
+          if (rawRole === "CREATOR" || rawRole === "INSTRUCTOR") {
+            role = "instructor";
+          } else if (rawRole === "CUSTOMER") {
+            role = "customer";
           } else if (email.includes("instructor") || email.includes("david") || email.includes("charlee")) {
             role = "instructor";
           }

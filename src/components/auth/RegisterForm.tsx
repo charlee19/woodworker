@@ -50,13 +50,18 @@ export default function RegisterForm() {
 
     try {
       // 1. Sign up the user via Supabase Auth
+      // We map 'instructor' -> 'CREATOR' and 'customer' -> 'CUSTOMER' to match the database's "Role" ENUM ('CUSTOMER', 'CREATOR', 'SUPERADMIN') exactly.
+      // The database automatic sync trigger handle_new_auth_user() reads this raw_user_meta_data->>'role' and casts it.
+      // If we pass 'customer' or 'instructor' in lowercase, the cast inside the trigger fails, causing the entire signUp flow to fail.
+      const mappedDbRole = selectedRole === "instructor" ? "CREATOR" : "CUSTOMER";
+
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
             name: fullName,
-            role: selectedRole, // store in user metadata for reference
+            role: mappedDbRole, // store correct uppercase enum value in user metadata
           },
         },
       });
@@ -68,8 +73,8 @@ export default function RegisterForm() {
       const user = authData?.user;
 
       if (user) {
-        // 2. Insert into the "profiles" table
-        // We do this with an upsert or insert, wrapping it in a try-catch to handle DB permission or schema missing errors gracefully.
+        // 2. Insert into the "profiles" table and "User" table to ensure full compatibility.
+        // We do this wrapping in try-catch to handle DB permissions gracefully.
         try {
           const { error: profileError } = await supabase
             .from("profiles")
@@ -77,17 +82,37 @@ export default function RegisterForm() {
               {
                 id: user.id,
                 email: email,
-                role: selectedRole,
+                role: selectedRole, // 'customer' or 'instructor'
                 name: fullName,
                 created_at: new Date().toISOString(),
               },
             ]);
 
           if (profileError) {
-            console.warn("Could not insert profile in DB:", profileError.message);
+            console.warn("Could not insert profile in DB profiles:", profileError.message);
           }
         } catch (dbErr) {
           console.warn("DB Profiles insertion skipped or errored:", dbErr);
+        }
+
+        try {
+          // Explicit upsert into public "User" table to ensure the user is saved.
+          const { error: userTableError } = await supabase
+            .from("User")
+            .upsert([
+              {
+                id: user.id,
+                email: email,
+                name: fullName,
+                role: mappedDbRole,
+              },
+            ]);
+
+          if (userTableError) {
+            console.warn("Could not upsert user in public.User:", userTableError.message);
+          }
+        } catch (dbErr) {
+          console.warn("DB public.User direct upsert skipped or errored:", dbErr);
         }
 
         // 3. Store fallback credentials in localStorage so user role state is instantly resolved in developer preview environment
