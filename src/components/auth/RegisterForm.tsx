@@ -59,6 +59,7 @@ export default function RegisterForm() {
         email,
         password,
         options: {
+          emailRedirectTo: typeof window !== "undefined" ? `${window.location.origin}/login?confirmed=true` : undefined,
           data: {
             name: fullName,
             role: mappedDbRole, // store correct uppercase enum value in user metadata
@@ -123,13 +124,23 @@ export default function RegisterForm() {
         };
         localStorage.setItem("guild_fallback_user", JSON.stringify(fallbackUser));
 
-        setSuccessMsg("Account successfully created! Redirecting to your dashboard...");
-        
-        // Redirect based on role
-        setTimeout(() => {
-          router.push(selectedRole === "instructor" ? "/instructor" : "/dashboard");
-          router.refresh();
-        }, 1500);
+        if (!authData.session) {
+          // Email confirmation is enabled
+          setSuccessMsg("Account registered successfully! A verification email has been sent. Please confirm your email before signing in.");
+          
+          setTimeout(() => {
+            router.push(`/login?email=${encodeURIComponent(email)}&checkEmail=true`);
+          }, 3500);
+        } else {
+          // Email confirmation is disabled
+          setSuccessMsg("Account successfully created! Redirecting to your dashboard...");
+          
+          // Redirect based on role
+          setTimeout(() => {
+            router.push(selectedRole === "instructor" ? "/instructor" : "/dashboard");
+            router.refresh();
+          }, 1500);
+        }
       } else {
         throw new Error("Could not create user session. Please check your credentials.");
       }

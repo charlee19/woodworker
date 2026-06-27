@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, CheckCircle2, AlertCircle } from "lucide-react";
@@ -14,6 +14,24 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const emailParam = params.get("email");
+      const checkEmailParam = params.get("checkEmail");
+      const confirmedParam = params.get("confirmed");
+
+      if (emailParam) {
+        setEmail(decodeURIComponent(emailParam));
+      }
+      if (checkEmailParam) {
+        setSuccessMsg("Registration successful! We have sent you an email. Please check your inbox and click the verification link before logging in.");
+      } else if (confirmedParam) {
+        setSuccessMsg("Email confirmed successfully! Welcome to the Guild. You can now sign in below.");
+      }
+    }
+  }, []);
 
   const isEmailValid = email.includes("@") && email.includes(".");
   const isFormValid = isEmailValid && password.length >= 6;
