@@ -117,8 +117,8 @@ export default function NextNavbar() {
 
           {/* Right Action Buttons */}
           <div className="hidden sm:flex items-center gap-6">
-            {user ? (
-              <div className="flex items-center gap-5">
+            {user && (
+              <div className="flex items-center gap-5 mr-2">
                 {user.role === "SUPERADMIN" && (
                   <Link
                     href="/admin"
@@ -134,16 +134,19 @@ export default function NextNavbar() {
                   <LayoutDashboard className="w-4 h-4 text-stone-600" />
                   Dashboard ({user.role})
                 </Link>
+              </div>
+            )}
+
+            <div className="flex items-center gap-4">
+              {user ? (
                 <button
                   onClick={handleLogout}
-                  className="text-stone-500 hover:text-red-750 font-medium text-sm flex items-center gap-1 cursor-pointer transition-colors"
+                  className="text-stone-500 hover:text-amber-850 font-semibold text-sm flex items-center gap-1.5 cursor-pointer transition-colors"
                 >
-                  <LogOut className="w-4 h-4" />
-                  Sign Out
+                  <LogOut className="w-4 h-4 text-stone-500" />
+                  Logout
                 </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-4">
+              ) : (
                 <Link
                   href="/login"
                   className="text-stone-700 hover:text-amber-800 transition-colors font-semibold text-sm flex items-center gap-1.5 cursor-pointer"
@@ -151,14 +154,14 @@ export default function NextNavbar() {
                   <User className="w-4 h-4 text-stone-500" />
                   Login
                 </Link>
-                <Link
-                  href="/register"
-                  className="text-amber-900 hover:text-amber-700 font-semibold text-sm cursor-pointer"
-                >
-                  Register
-                </Link>
-              </div>
-            )}
+              )}
+              <Link
+                href="/register"
+                className="text-amber-900 hover:text-amber-700 font-semibold text-sm cursor-pointer"
+              >
+                Register
+              </Link>
+            </div>
           </div>
           
           {/* Simple Mobile Navigation Links */}
@@ -192,6 +195,13 @@ export default function NextNavbar() {
                   <LayoutDashboard className="w-3.5 h-3.5 text-stone-500" />
                   Dash
                 </Link>
+                <button
+                  onClick={handleLogout}
+                  className="text-xs text-stone-500 hover:text-red-700 font-bold px-2 py-2 cursor-pointer flex items-center gap-1"
+                >
+                  <LogOut className="w-3.5 h-3.5 text-stone-400" />
+                  Logout
+                </button>
               </>
             ) : (
               <Link
