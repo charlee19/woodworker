@@ -62,7 +62,7 @@ export default function NextFooter() {
               </li>
               <li>
                 <Link href="/admin" className="hover:text-amber-400 transition-colors font-mono text-[11px] text-stone-400">
-                  ⚙️ Superadmin Ledger
+                  ⚙️ Admin Ledger
                 </Link>
               </li>
             </ul>

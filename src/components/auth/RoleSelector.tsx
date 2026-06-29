@@ -37,7 +37,7 @@ export default function RoleSelector({ selectedRole, onChange }: RoleSelectorPro
             <GraduationCap className="w-6 h-6" />
           </div>
           <h3 className="font-display font-bold text-stone-900 text-base mb-1">
-            Artisan Student
+            Student/Customer
           </h3>
           <p className="text-stone-500 text-xs leading-relaxed">
             Learn and buy woodworking courses to master traditional crafts.

@@ -1,10 +1,56 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { BookOpen, Calendar, Mail, Award, CheckCircle, ShieldCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
+import { BookOpen, Calendar, Mail, Award, CheckCircle, ShieldCheck, Loader2 } from "lucide-react";
 
 export default function StudentDashboardPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function checkRole() {
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser();
+        if (error || !user) {
+          // Keep on page if they aren't logged in, or fallback, but let them read.
+          setLoading(false);
+          return;
+        }
+
+        // Fetch user role from public "User" table with fallback to metadata
+        let role = (user.user_metadata?.role || "CUSTOMER").toUpperCase();
+        try {
+          const { data: dbUser, error: dbError } = await supabase
+            .from("User")
+            .select("role")
+            .eq("id", user.id)
+            .single();
+
+          if (!dbError && dbUser) {
+            role = (dbUser.role || "CUSTOMER").toUpperCase();
+          }
+        } catch (dbErr) {
+          console.warn("Could not fetch user role in dashboard:", dbErr);
+        }
+
+        if (role === "ADMIN" || role === "SUPERADMIN") {
+          router.replace("/admin");
+        } else if (role === "CREATOR" || role === "INSTRUCTOR") {
+          router.replace("/instructor");
+        } else {
+          setLoading(false);
+        }
+      } catch (e) {
+        console.error("Dashboard role check failed:", e);
+        setLoading(false);
+      }
+    }
+    checkRole();
+  }, [router]);
+
   const [bookings] = useState([
     {
       id: "bk-1",
@@ -37,6 +83,17 @@ export default function StudentDashboardPage() {
       status: "Verified"
     }
   ]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="animate-pulse space-y-4 text-center">
+          <Loader2 className="w-12 h-12 text-amber-600 mx-auto animate-spin" />
+          <h2 className="text-lg font-medium text-stone-700 font-display">Verifying portal access...</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-stone-50 py-16 sm:py-24" id="student-dashboard">

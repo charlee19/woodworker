@@ -18,9 +18,25 @@ export default function NextNavbar() {
     try {
       const { data: { user: sbUser }, error } = await supabase.auth.getUser();
       if (sbUser && !error) {
+        let role = (sbUser.user_metadata?.role || "CUSTOMER").toUpperCase();
+
+        try {
+          const { data: dbUser, error: dbError } = await supabase
+            .from("User")
+            .select("role")
+            .eq("id", sbUser.id)
+            .single();
+
+          if (!dbError && dbUser) {
+            role = (dbUser.role || "CUSTOMER").toUpperCase();
+          }
+        } catch (dbErr) {
+          console.warn("Could not fetch user role from db:", dbErr);
+        }
+
         const mappedUser = {
           name: sbUser.user_metadata?.name || sbUser.email?.split("@")[0] || "User",
-          role: sbUser.user_metadata?.role || "CUSTOMER",
+          role: (role === "ADMIN" || role === "SUPERADMIN") ? "ADMIN" : role,
         };
         setUser(mappedUser);
         localStorage.setItem("guild_fallback_user", JSON.stringify(mappedUser));
@@ -110,29 +126,23 @@ export default function NextNavbar() {
             <Link href="/blog" className="hover:text-amber-800 transition-colors">
               Blog
             </Link>
-            <Link href="/admin" className="hover:text-amber-850 font-bold text-amber-900 transition-colors">
-              ⚙️ Admin
-            </Link>
+            {user?.role === "ADMIN" && (
+              <Link href="/admin" className="hover:text-amber-850 font-bold text-amber-900 transition-colors">
+                ⚙️ Admin
+              </Link>
+            )}
           </nav>
 
           {/* Right Action Buttons */}
           <div className="hidden sm:flex items-center gap-6">
             {user && (
               <div className="flex items-center gap-5 mr-2">
-                {user.role === "SUPERADMIN" && (
-                  <Link
-                    href="/admin"
-                    className="text-stone-100 hover:text-stone-50 transition-colors font-bold text-sm bg-amber-800 hover:bg-amber-900 px-3.5 py-2 rounded-xl flex items-center gap-1 cursor-pointer"
-                  >
-                    ⚙️ Admin Ledger
-                  </Link>
-                )}
                 <Link
-                  href={user.role === "CREATOR" ? "/instructor" : "/dashboard"}
+                  href={user.role === "ADMIN" ? "/admin" : (user.role === "CREATOR" || user.role === "INSTRUCTOR" ? "/instructor" : "/dashboard")}
                   className="text-stone-700 hover:text-amber-800 transition-colors font-bold text-sm flex items-center gap-1.5 cursor-pointer bg-stone-50 px-3.5 py-2 rounded-xl border border-stone-200"
                 >
                   <LayoutDashboard className="w-4 h-4 text-stone-600" />
-                  Dashboard ({user.role})
+                  Dashboard
                 </Link>
               </div>
             )}
@@ -172,24 +182,10 @@ export default function NextNavbar() {
             >
               🔨 Builder
             </Link>
-            <Link
-              href="/admin"
-              className="text-xs bg-amber-100 text-amber-950 border border-amber-300 px-2.5 py-2 rounded-lg font-bold cursor-pointer"
-            >
-              ⚙️ Admin
-            </Link>
             {user ? (
               <>
-                {user.role === "SUPERADMIN" && (
-                  <Link
-                    href="/admin"
-                    className="text-xs text-amber-800 font-bold px-1.5 py-2 cursor-pointer"
-                  >
-                    👑 Ledger
-                  </Link>
-                )}
                 <Link
-                  href={user.role === "CREATOR" ? "/instructor" : "/dashboard"}
+                  href={user.role === "ADMIN" ? "/admin" : (user.role === "CREATOR" || user.role === "INSTRUCTOR" ? "/instructor" : "/dashboard")}
                   className="text-xs text-amber-900 font-bold px-2 py-2 cursor-pointer flex items-center gap-1"
                 >
                   <LayoutDashboard className="w-3.5 h-3.5 text-stone-500" />

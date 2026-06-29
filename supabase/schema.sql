@@ -4,7 +4,7 @@
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'Role') THEN
-        CREATE TYPE "Role" AS ENUM ('CUSTOMER', 'CREATOR', 'SUPERADMIN');
+        CREATE TYPE "Role" AS ENUM ('CUSTOMER', 'CREATOR', 'ADMIN');
     END IF;
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'EnrollmentStatus') THEN
         CREATE TYPE "EnrollmentStatus" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
@@ -170,7 +170,7 @@ CREATE POLICY "Admins can manage all instructor profiles" ON "instructor_profile
     EXISTS (
       SELECT 1 FROM public."User" 
       WHERE public."User".id = auth.uid() 
-      AND public."User".role = 'SUPERADMIN'
+      AND public."User".role = 'ADMIN'
     )
   );
 

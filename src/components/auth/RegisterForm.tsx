@@ -50,7 +50,7 @@ export default function RegisterForm() {
 
     try {
       // 1. Sign up the user via Supabase Auth
-      // We map 'instructor' -> 'CREATOR' and 'customer' -> 'CUSTOMER' to match the database's "Role" ENUM ('CUSTOMER', 'CREATOR', 'SUPERADMIN') exactly.
+      // We map 'instructor' -> 'CREATOR' and 'customer' -> 'CUSTOMER' to match the database's "Role" ENUM ('CUSTOMER', 'CREATOR', 'ADMIN') exactly.
       // The database automatic sync trigger handle_new_auth_user() reads this raw_user_meta_data->>'role' and casts it.
       // If we pass 'customer' or 'instructor' in lowercase, the cast inside the trigger fails, causing the entire signUp flow to fail.
       const mappedDbRole = selectedRole === "instructor" ? "CREATOR" : "CUSTOMER";
@@ -74,28 +74,6 @@ export default function RegisterForm() {
       const user = authData?.user;
 
       if (user) {
-        // 2. Insert into the "profiles" table and "User" table to ensure full compatibility.
-        // We do this wrapping in try-catch to handle DB permissions gracefully.
-        try {
-          const { error: profileError } = await supabase
-            .from("profiles")
-            .insert([
-              {
-                id: user.id,
-                email: email,
-                role: selectedRole, // 'customer' or 'instructor'
-                name: fullName,
-                created_at: new Date().toISOString(),
-              },
-            ]);
-
-          if (profileError) {
-            console.warn("Could not insert profile in DB profiles:", profileError.message);
-          }
-        } catch (dbErr) {
-          console.warn("DB Profiles insertion skipped or errored:", dbErr);
-        }
-
         try {
           // Explicit upsert into public "User" table to ensure the user is saved.
           const { error: userTableError } = await supabase
@@ -278,7 +256,7 @@ export default function RegisterForm() {
           }`}
           id="reg-btn-submit"
         >
-          {loading ? "Creating Guild Account..." : "Continue to Guild Registration &rarr;"}
+          {loading ? "Creating Guild Account..." : "REGISTER NOW"}
         </button>
 
         {/* Step 4: Social Login Section */}

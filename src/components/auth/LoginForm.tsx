@@ -66,46 +66,44 @@ export default function LoginForm() {
       const user = authData?.user;
 
       if (user) {
-        let role: "customer" | "instructor" = "customer";
+        let role: "customer" | "instructor" | "admin" = "customer";
 
-        // 2. Fetch profile from Supabase (checking both "profiles" and public "User" tables for complete synchronization)
+        // 2. Fetch profile from Supabase (checking the authoritative public "User" table first, then metadata)
         try {
-          const { data: profile, error: profileError } = await supabase
-            .from("profiles")
+          const { data: dbUser, error: dbUserError } = await supabase
+            .from("User")
             .select("role")
             .eq("id", user.id)
             .single();
 
-          if (!profileError && profile) {
-            const rawRole = (profile.role || "").toLowerCase();
-            role = (rawRole === "instructor" || rawRole === "creator") ? "instructor" : "customer";
-          } else {
-            // Check public "User" table as the primary source of truth from trigger
-            const { data: dbUser, error: dbUserError } = await supabase
-              .from("User")
-              .select("role")
-              .eq("id", user.id)
-              .single();
-
-            if (!dbUserError && dbUser) {
-              const rawRole = (dbUser.role || "").toUpperCase();
-              role = rawRole === "CREATOR" ? "instructor" : "customer";
+          if (!dbUserError && dbUser) {
+            const rawRole = (dbUser.role || "").toUpperCase();
+            if (rawRole === "ADMIN" || rawRole === "SUPERADMIN") {
+              role = "admin";
+            } else if (rawRole === "CREATOR" || rawRole === "INSTRUCTOR") {
+              role = "instructor";
             } else {
-              // Fallback to user metadata
-              const rawRole = (user.user_metadata?.role || "").toUpperCase();
-              if (rawRole === "CREATOR" || rawRole === "INSTRUCTOR") {
-                role = "instructor";
-              } else if (rawRole === "CUSTOMER") {
-                role = "customer";
-              } else if (email.includes("instructor") || email.includes("david") || email.includes("charlee")) {
-                role = "instructor";
-              }
+              role = "customer";
+            }
+          } else {
+            // Fallback to user metadata
+            const rawRole = (user.user_metadata?.role || "").toUpperCase();
+            if (rawRole === "ADMIN" || rawRole === "SUPERADMIN") {
+              role = "admin";
+            } else if (rawRole === "CREATOR" || rawRole === "INSTRUCTOR") {
+              role = "instructor";
+            } else if (rawRole === "CUSTOMER") {
+              role = "customer";
+            } else if (email.includes("instructor") || email.includes("david") || email.includes("charlee")) {
+              role = "instructor";
             }
           }
         } catch (dbErr) {
           console.warn("DB Profiles check skipped or errored, reading fallback:", dbErr);
           const rawRole = (user.user_metadata?.role || "").toUpperCase();
-          if (rawRole === "CREATOR" || rawRole === "INSTRUCTOR") {
+          if (rawRole === "ADMIN" || rawRole === "SUPERADMIN") {
+            role = "admin";
+          } else if (rawRole === "CREATOR" || rawRole === "INSTRUCTOR") {
             role = "instructor";
           } else if (rawRole === "CUSTOMER") {
             role = "customer";
@@ -117,7 +115,7 @@ export default function LoginForm() {
         // 3. Keep local storage fallback synchronised
         const fallbackUser = {
           name: user.user_metadata?.name || email.split("@")[0] || "Artisan Woodworker",
-          role: role === "instructor" ? "INSTRUCTOR" : "CUSTOMER",
+          role: role === "admin" ? "ADMIN" : (role === "instructor" ? "INSTRUCTOR" : "CUSTOMER"),
           email: email,
         };
         localStorage.setItem("guild_fallback_user", JSON.stringify(fallbackUser));
@@ -126,7 +124,11 @@ export default function LoginForm() {
 
         // Redirect based on role
         setTimeout(() => {
-          router.push(role === "instructor" ? "/instructor" : "/dashboard");
+          if (role === "admin") {
+            router.push("/admin");
+          } else {
+            router.push(role === "instructor" ? "/instructor" : "/dashboard");
+          }
           router.refresh();
         }, 1500);
       } else {

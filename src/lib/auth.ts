@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 export enum Role {
   CUSTOMER = "CUSTOMER",
   CREATOR = "CREATOR",
-  SUPERADMIN = "SUPERADMIN",
+  ADMIN = "ADMIN",
 }
 
 export interface JWTPayload {
