@@ -1,10 +1,49 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Users, Calendar, DollarSign, BookOpen, Clock, Tag, Plus, MessageSquare, ShieldCheck, TrendingUp } from "lucide-react";
+import { supabase } from "../../lib/supabase";
 
 export default function InstructorDashboardPage() {
+  const [loading, setLoading] = useState(true);
+  const [profileComplete, setProfileComplete] = useState(false);
+
+  useEffect(() => {
+    async function checkProfile() {
+      try {
+        setLoading(true);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data, error } = await supabase
+            .from("instructor_profiles")
+            .select("*")
+            .eq("id", user.id)
+            .maybeSingle();
+
+          if (data) {
+            const isComplete = !!(
+              data.full_name?.trim() &&
+              data.address?.trim() &&
+              data.postcode?.trim() &&
+              data.phone_number?.trim() &&
+              data.email?.trim() &&
+              data.website?.trim()
+            );
+            setProfileComplete(isComplete);
+          } else {
+            setProfileComplete(false);
+          }
+        }
+      } catch (err) {
+        console.error("Error loading profile on dashboard:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkProfile();
+  }, []);
+
   const [stats] = useState({
     totalStudents: 14,
     activeCourses: 3,
@@ -54,16 +93,54 @@ export default function InstructorDashboardPage() {
             </div>
             
             <div className="flex-shrink-0">
-              <Link
-                href="/course-builder"
-                className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold text-xs font-mono uppercase px-6 py-4 rounded-xl transition-all shadow-md"
-              >
-                <Plus className="w-4 h-4" />
-                Build New Workshop &rarr;
-              </Link>
+              {loading || !profileComplete ? (
+                <span
+                  id="build-workshop-disabled"
+                  className="inline-flex items-center gap-1.5 bg-stone-300 text-stone-500 font-bold text-xs font-mono uppercase px-6 py-4 rounded-xl cursor-not-allowed opacity-75 select-none shadow-none"
+                  title="Please complete your profile first"
+                >
+                  <Plus className="w-4 h-4" />
+                  Build New Workshop &rarr;
+                </span>
+              ) : (
+                <Link
+                  id="build-workshop-enabled"
+                  href="/course-builder"
+                  className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold text-xs font-mono uppercase px-6 py-4 rounded-xl transition-all shadow-md"
+                >
+                  <Plus className="w-4 h-4" />
+                  Build New Workshop &rarr;
+                </Link>
+              )}
             </div>
           </div>
         </div>
+
+        {/* Complete Profile Warning Banner */}
+        {!loading && !profileComplete && (
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-3xs animate-fade-in" id="profile-incomplete-warning">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-xl shrink-0 mt-0.5">
+                ⚠️
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-stone-900 font-display">
+                  Instructor Profile Incomplete
+                </h3>
+                <p className="text-xs text-stone-600 leading-relaxed mt-1">
+                  You must complete your required profile details (Full Name, Address, Postcode, Telephone, Email, and Website) before you can build new workshops.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/instructor/profile"
+              className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold text-xs font-mono uppercase px-5 py-3.5 rounded-xl transition-all shadow-md shrink-0 self-end md:self-center"
+              id="btn-complete-profile"
+            >
+              Complete Profile &rarr;
+            </Link>
+          </div>
+        )}
 
         {/* Stats Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">

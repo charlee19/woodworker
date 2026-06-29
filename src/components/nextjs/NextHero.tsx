@@ -23,7 +23,7 @@ export default function NextHero() {
         </span>
         
         <h1 className="font-display text-4xl sm:text-5xl md:text-6xl text-white tracking-tight leading-[1.1] mb-6 drop-shadow-md">
-          Lock the Soul of Wood with <span className="text-amber-400">Traditional Craft</span>
+          View the Soul of Wood with <span className="text-amber-400">Traditional Craft</span>
         </h1>
         
         <p className="text-stone-200 text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto mb-10 drop-shadow">
