@@ -30,7 +30,7 @@ export default function LoginPage() {
             Legacy Workshop
           </span>
           <h2 className="text-3xl font-display font-medium leading-tight">
-            "To shape wood is to converse with time itself. Welcome back to the bench."
+            "To shape wood is to converse with time itself. Welcome back to the WoodWorker."
           </h2>
           <div className="pt-2 border-t border-stone-700/60 flex items-center justify-between">
             <span className="text-xs text-stone-300 font-mono">
@@ -50,7 +50,7 @@ export default function LoginPage() {
           <div className="flex items-center gap-2">
             <span className="text-2xl">🪓</span>
             <span className="font-display font-bold text-stone-900 text-sm tracking-widest uppercase">
-              Woodworking Guild
+              WoodWorker
             </span>
           </div>
         </div>

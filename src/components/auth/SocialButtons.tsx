@@ -39,7 +39,7 @@ export default function SocialButtons({ onError }: SocialButtonsProps) {
     <div className="space-y-4" id="social-buttons-section">
       <div className="relative flex py-2 items-center">
         <div className="flex-grow border-t border-stone-200"></div>
-        <span className="flex-shrink mx-4 text-stone-400 text-xs font-mono uppercase tracking-widest">
+        <span className="flex-shrink mx-4 text-[#080808] text-xs font-mono uppercase tracking-widest">
           Or continue with
         </span>
         <div className="flex-grow border-t border-stone-200"></div>

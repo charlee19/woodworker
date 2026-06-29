@@ -143,7 +143,7 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-6" id="login-form-root">
+    <div className="w-full max-w-md mx-auto space-y-6 mr-[282.25px] ml-[283.25px] -mt-[283px]" id="login-form-root">
       <div>
         <h2 className="text-2xl sm:text-3xl font-display font-medium text-stone-900 tracking-tight">
           Welcome Back
@@ -224,14 +224,14 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={!isFormValid || loading}
-          className={`w-full font-mono text-xs font-bold uppercase tracking-wider py-4 rounded-xl transition-all shadow-md cursor-pointer ${
+          className={`w-full font-mono text-[12px] font-bold uppercase tracking-wider py-4 rounded-xl transition-all shadow-md cursor-pointer text-[#010101] ${
             isFormValid && !loading
-              ? "bg-stone-900 hover:bg-amber-800 text-white"
-              : "bg-stone-200 text-stone-400 cursor-not-allowed shadow-none"
+              ? "bg-stone-900 hover:bg-amber-800"
+              : "bg-stone-200 cursor-not-allowed shadow-none"
           }`}
           id="login-btn-submit"
         >
-          {loading ? "Authorizing..." : "Sign In &rarr;"}
+          {loading ? "Authorizing..." : "SIGN IN"}
         </button>
 
         {/* Social buttons */}
